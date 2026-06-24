@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Name & Address</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 18px;
+      font-family: Arial, sans-serif;
+      color: white;
+
+      background-color: #050508;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.035) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,0.035) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.035) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.035) 75%);
+      background-size: 18px 18px;
+      background-position: 0 0, 0 9px, 9px -9px, -9px 0px;
+    }
+
+    .app {
+      max-width: 430px;
+      margin: auto;
+    }
+
+    .header {
+      background: #14141c;
+      border: 1px solid #252535;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+      text-align: center;
+      box-shadow: 0 0 18px rgba(0, 255, 153, 0.12);
+    }
+
+    .title {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .time {
+      color: #00ff99;
+      font-size: 13px;
+      margin-top: 8px;
+      font-weight: bold;
+    }
+
+    .card {
+      background: #14141c;
+      border: 1px solid #252535;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .top-control .label {
+      text-align: center;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #333344;
+      background: #0f0f16;
+      color: white;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #666;
+    }
+
+    .section-title {
+      text-align: center;
+      color: #00ff99;
+      font-size: 14px;
+      font-weight: bold;
+      margin: 14px 0 8px;
+    }
+
+    .result-card {
+      background: #14141c;
+      border: 1px solid #252535;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .result-row {
+      display: grid;
+      grid-template-columns: 1fr 70px;
+      align-items: center;
+      gap: 10px;
+      min-height: 58px;
+    }
+
+    .result-value {
+      font-size: 15px;
+      font-weight: bold;
+      line-height: 1.4;
+      min-height: 42px;
+      max-height: 42px;
+      overflow: hidden;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      word-break: break-word;
+    }
+
+    .copy-btn {
+      width: 70px;
+      padding: 10px 6px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(0, 255, 153, 0.12);
+      color: #00ff99;
+      border: 1px solid rgba(0, 255, 153, 0.35);
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .copy-btn:active {
+      transform: scale(0.95);
+    }
+
+    .main-btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 14px;
+      background: #00ff99;
+      color: #000;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(0, 255, 153, 0.25);
+      margin-top: 4px;
+    }
+
+    .main-btn:active {
+      transform: scale(0.97);
+    }
+
+    .status {
+      text-align: center;
+      color: #00ff99;
+      font-size: 12px;
+      min-height: 18px;
+      margin-top: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #555;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .zx {
+      color: #00ff99;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+
+    <div class="header">
+      <div class="title">Random Name & Address</div>
+      <div class="time" id="timeIndonesia">Memuat waktu...</div>
+    </div>
+
+    <div class="card">
+      <div class="grid-2 top-control">
+        <div>
+          <div class="label">👫 Set Gender</div>
+          <select id="genderSetup">
+            <option value="random">Random</option>
+            <option value="pria">Pria</option>
+            <option value="wanita">Wanita</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="label">Set Address 🏠</div>
+          <select id="addressCategory">
+            <option value="jalan">Jalan</option>
+            <option value="rumah">Rumah</option>
+            <option value="warung">Warung/Toko</option>
+            <option value="hotel">Hotel/Kantor</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="grid-2">
+        <div>
+          <div class="label">Code</div>
+          <input type="text" id="codeInput" placeholder="input manual">
+        </div>
+
+        <div>
+          <div class="label">Letak</div>
+          <select id="codePosition">
+            <option value="frontName">Depan Nama</option>
+            <option value="middleName">Tengah Nama</option>
+            <option value="backName">Belakang Nama</option>
+            <option value="frontAddress">Depan Address</option>
+            <option value="middleAddress">Tengah Address</option>
+            <option value="backAddress">Belakang Address</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Name</div>
+
+    <div class="result-card">
+      <div class="result-row">
+        <div class="result-value" id="nama">Anita Susilawati</div>
+        <button class="copy-btn" onclick="copyText('nama', 'Name')">Copy</button>
+      </div>
+    </div>
+
+    <div class="section-title">Address</div>
+
+    <div class="result-card">
+      <div class="result-row">
+        <div class="result-value" id="alamat">Jalan Bangka Raya No.25 RT.13 RW.10 Samping Tukang Martabak Bangka</div>
+        <button class="copy-btn" onclick="copyText('alamat', 'Address')">Copy</button>
+      </div>
+    </div>
+
+    <button class="main-btn" onclick="randomData()">⚡ Random</button>
+
+    <div class="status" id="status"></div>
+
+    <div class="footer">
+      Powered by <span class="zx">ZX_</span>
+    </div>
+
+  </div>
+
+  <script>
+    const maleFirstNames = [
+      "Ahmad", "Rizky", "Dimas", "Fajar", "Bayu",
+      "Rian", "Andi", "Galih", "Yoga", "Aldi",
+      "Rama", "Ilham", "Reza", "Hendra", "Bima",
+      "Agus", "Fikri", "Yusuf", "Ardi", "Doni",
+      "Rafi", "Farhan", "Naufal", "Iqbal", "Daffa",
+      "Rendi", "Bagas", "Raka", "Teguh", "Wahyu",
+      "Satria", "Rangga", "Gilang", "Aditya", "Kevin",
+      "Robby", "Irfan", "Zaki", "Fauzan", "Rizal"
+    ];
+
+    const femaleFirstNames = [
+      "Siti", "Aisyah", "Dewi", "Rina", "Nadia",
+      "Putri", "Lestari", "Intan", "Maya", "Fitri",
+      "Anisa", "Nabila", "Salsa", "Citra", "Dinda",
+      "Aulia", "Rahma", "Tiara", "Wulan", "Indah",
+      "Ayu", "Mega", "Riska", "Novi", "Yuni",
+      "Dian", "Vina", "Fani", "Nisa", "Silvi",
+      "Mila", "Rara", "Tasya", "Zahra", "Nayla",
+      "Amel", "Rani", "Sinta", "Anita", "Lina"
+    ];
+
+    const lastNames = [
+      "Jayadi", "Pratama", "Saputra", "Maulana", "Nugraha",
+      "Hidayat", "Firmansyah", "Ramadhan", "Wijaya", "Prasetyo",
+      "Setiawan", "Kurniawan", "Permana", "Santoso", "Hermawan",
+      "Fauzi", "Hakim", "Wibowo", "Ananda", "Syahputra",
+      "Pangestu", "Mahendra", "Gunawan", "Susanto", "Alamsyah",
+      "Fadillah", "Nurhadi", "Prayoga", "Pamungkas", "Kusuma",
+      "Cahyono", "Suryadi", "Hartono", "Nugroho", "Utama",
+      "Ardiansyah", "Kurnia", "Halim", "Safitri", "Susilawati"
+    ];
+
+    const streetNames = [
+      "Jalan Bangka Raya",
+      "Jalan Pondok Bambu Raya",
+      "Jalan Melati Indah",
+      "Jalan Mawar Merah",
+      "Jalan Kenanga Raya",
+      "Jalan Anggrek Selatan",
+      "Jalan Cempaka Putih",
+      "Jalan Merdeka Timur",
+      "Jalan Flamboyan",
+      "Jalan Kamboja Raya",
+      "Jalan Teratai",
+      "Jalan Rajawali",
+      "Jalan Garuda",
+      "Jalan Elang",
+      "Jalan Merpati",
+      "Jalan Cemara",
+      "Jalan Pinang Raya",
+      "Jalan Mangga Besar",
+      "Jalan Durian Indah",
+      "Jalan Jati Asri"
+    ];
+
+    const cities = [
+      "Jakarta Timur",
+      "Jakarta Selatan",
+      "Jakarta Barat",
+      "Jakarta Pusat",
+      "Jakarta Utara",
+      "Bekasi",
+      "Depok",
+      "Tangerang",
+      "Bogor",
+      "Bandung"
+    ];
+
+    const housingNames = [
+      "Perumahan Griya Asri",
+      "Perumahan Bumi Indah",
+      "Cluster Melati Residence",
+      "Komplek Cempaka Residence",
+      "Perumahan Taman Anggrek",
+      "Perumahan Pondok Sejahtera",
+      "Cluster Green Garden",
+      "Perumahan Permata Indah",
+      "Komplek Mawar Residence",
+      "Perumahan Harmoni Asri"
+    ];
+
+    const shopTypes = [
+      "Warung", "Toko", "Ruko", "Kios"
+    ];
+
+    const shopNames = [
+      "Sumber Jaya",
+      "Berkah Abadi",
+      "Maju Lancar",
+      "Sinar Baru",
+      "Jaya Makmur",
+      "Barokah Sejahtera",
+      "Mitra Usaha",
+      "Sahabat Niaga",
+      "Amanah Store",
+      "Serba Ada"
+    ];
+
+    const officeTypes = [
+      "Hotel", "Kantor", "Gedung", "Office Tower"
+    ];
+
+    const officeNames = [
+      "Nusantara",
+      "Garuda",
+      "Merdeka",
+      "Sentosa",
+      "Cakrawala",
+      "Mahkota",
+      "Permata",
+      "Galaxy",
+      "Grand Asri",
+      "Mega Jaya"
+    ];
+
+    const landmarks = [
+      "Samping Tukang Martabak Bangka",
+      "Dekat Warung Kopi",
+      "Depan Masjid",
+      "Sebelah Minimarket",
+      "Dekat Pos Ronda",
+      "Belakang Pasar",
+      "Samping Apotek",
+      "Dekat Toko Bangunan",
+      "Seberang Bengkel Motor",
+      "Sebelah Laundry"
+    ];
+
+    function getRandomItem(data) {
+      const index = Math.floor(Math.random() * data.length);
+      return data[index];
+    }
+
+    function getRandomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getRandomLetter() {
+      const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
+      return getRandomItem(letters);
+    }
+
+    function createName() {
+      let genderSetup = document.getElementById("genderSetup").value;
+      let finalGender = genderSetup;
+
+      if (genderSetup === "random") {
+        finalGender = getRandomItem(["pria", "wanita"]);
+      }
+
+      let firstName = "";
+
+      if (finalGender === "pria") {
+        firstName = getRandomItem(maleFirstNames);
+      } else {
+        firstName = getRandomItem(femaleFirstNames);
+      }
+
+      const lastName = getRandomItem(lastNames);
+
+      return {
+        first: firstName,
+        last: lastName,
+        full: firstName + " " + lastName
+      };
+    }
+
+    function createAddress() {
+      const category = document.getElementById("addressCategory").value;
+      const city = getRandomItem(cities);
+      const postalCode = getRandomNumber(10000, 99999);
+      const landmark = getRandomItem(landmarks);
+
+      if (category === "jalan") {
+        const street = getRandomItem(streetNames);
+        const houseNumber = getRandomNumber(1, 999);
+        const rt = getRandomNumber(1, 20);
+        const rw = getRandomNumber(1, 20);
+
+        return street + " No." + houseNumber +
+          " RT." + rt +
+          " RW." + rw +
+          " " + landmark +
+          ", " + city +
+          ", " + postalCode;
+      }
+
+      if (category === "rumah") {
+        const housing = getRandomItem(housingNames);
+        const block = getRandomLetter();
+        const number = getRandomNumber(1, 150);
+
+        return housing +
+          " Blok " + block +
+          " No." + number +
+          " " + landmark +
+          ", " + city +
+          ", " + postalCode;
+      }
+
+      if (category === "warung") {
+        const type = getRandomItem(shopTypes);
+        const name = getRandomItem(shopNames);
+        const street = getRandomItem(streetNames);
+        const number = getRandomNumber(1, 300);
+
+        return type + " " + name +
+          ", " + street +
+          " No." + number +
+          " " + landmark +
+          ", " + city +
+          ", " + postalCode;
+      }
+
+      if (category === "hotel") {
+        const type = getRandomItem(officeTypes);
+        const name = getRandomItem(officeNames);
+        const street = getRandomItem(streetNames);
+        const number = getRandomNumber(1, 300);
+        const floor = getRandomNumber(1, 30);
+
+        return type + " " + name +
+          ", " + street +
+          " No." + number +
+          ", Lantai " + floor +
+          " " + landmark +
+          ", " + city +
+          ", " + postalCode;
+      }
+    }
+
+    function insertMiddleText(text, code) {
+      const words = text.split(" ");
+      const middle = Math.floor(words.length / 2);
+      words.splice(middle, 0, code);
+      return words.join(" ");
+    }
+
+    function applyCodeToResult(person, address) {
+      const code = document.getElementById("codeInput").value.trim();
+      const position = document.getElementById("codePosition").value;
+
+      let finalName = person.full;
+      let finalAddress = address;
+
+      if (code === "") {
+        return {
+          name: finalName,
+          address: finalAddress
+        };
+      }
+
+      if (position === "frontName") {
+        finalName = code + " " + person.full;
+      }
+
+      if (position === "middleName") {
+        finalName = person.first + " " + code + " " + person.last;
+      }
+
+      if (position === "backName") {
+        finalName = person.full + " " + code;
+      }
+
+      if (position === "frontAddress") {
+        finalAddress = code + " " + address;
+      }
+
+      if (position === "middleAddress") {
+        finalAddress = insertMiddleText(address, code);
+      }
+
+      if (position === "backAddress") {
+        finalAddress = address + " " + code;
+      }
+
+      return {
+        name: finalName,
+        address: finalAddress
+      };
+    }
+
+    function randomData() {
+      const person = createName();
+      const address = createAddress();
+      const result = applyCodeToResult(person, address);
+
+      document.getElementById("nama").innerText = result.name;
+      document.getElementById("alamat").innerText = result.address;
+
+      showStatus("");
+    }
+
+    function copyText(elementId, label) {
+      const text = document.getElementById(elementId).innerText;
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() {
+          showStatus(label + " copied!");
+        }).catch(function() {
+          fallbackCopy(text, label);
+        });
+      } else {
+        fallbackCopy(text, label);
+      }
+    }
+
+    function fallbackCopy(text, label) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      showStatus(label + " copied!");
+    }
+
+    function showStatus(message) {
+      const status = document.getElementById("status");
+      status.innerText = message;
+
+      if (message !== "") {
+        setTimeout(function() {
+          status.innerText = "";
+        }, 1500);
+      }
+    }
+
+    function updateIndonesiaTime() {
+      const now = new Date();
+
+      const timeText = new Intl.DateTimeFormat("id-ID", {
+        timeZone: "Asia/Jakarta",
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }).format(now);
+
+      document.getElementById("timeIndonesia").innerText = timeText + " WIB";
+    }
+
+    updateIndonesiaTime();
+    setInterval(updateIndonesiaTime, 1000);
+  </script>
+
+</body>
+</html>
