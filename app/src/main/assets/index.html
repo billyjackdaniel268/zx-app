@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -132,6 +132,11 @@
       word-break: break-word;
     }
 
+    .password-input {
+      font-weight: bold;
+      min-height: 42px;
+    }
+
     .copy-btn {
       width: 70px;
       padding: 10px 6px;
@@ -238,6 +243,15 @@
             <option value="backAddress">Belakang Address</option>
           </select>
         </div>
+      </div>
+    </div>
+
+    <div class="section-title">Password</div>
+
+    <div class="result-card">
+      <div class="result-row">
+        <input class="password-input" type="text" id="passwordInput" placeholder="input manual">
+        <button class="copy-btn" onclick="copyInput('passwordInput', 'Password')">Copy</button>
       </div>
     </div>
 
@@ -567,6 +581,26 @@
     function copyText(elementId, label) {
       const text = document.getElementById(elementId).innerText;
 
+      if (text.trim() === "") {
+        showStatus(label + " masih kosong!");
+        return;
+      }
+
+      copyToClipboard(text, label);
+    }
+
+    function copyInput(elementId, label) {
+      const text = document.getElementById(elementId).value;
+
+      if (text.trim() === "") {
+        showStatus(label + " masih kosong!");
+        return;
+      }
+
+      copyToClipboard(text, label);
+    }
+
+    function copyToClipboard(text, label) {
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(function() {
           showStatus(label + " copied!");
